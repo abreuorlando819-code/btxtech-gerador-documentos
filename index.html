@@ -501,22 +501,7 @@ const defaultData = ()=>({
 
 let data = defaultData();
 
-function loadData(){
-  try{
-    const raw = localStorage.getItem(KEY_DATA);
-    if(raw){
-      data = Object.assign(defaultData(), JSON.parse(raw));
-      // garantir campos
-      data.paciente = Object.assign(defaultData().paciente, data.paciente||{});
-      data.profissional = Object.assign(defaultData().profissional, data.profissional||{});
-      data.atendimento = Object.assign(defaultData().atendimento, data.atendimento||{});
-      data.receita = Object.assign(defaultData().receita, data.receita||{});
-      data.orcamento = Object.assign(defaultData().orcamento, data.orcamento||{});
-      data.orcamento.itens = Array.isArray(data.orcamento.itens) ? data.orcamento.itens : [];
-      data.laudo = Object.assign(defaultData().laudo, data.laudo||{});
-    }
-  }catch(e){
-    data = defaultData();
+
   }
 }
 function saveData(){
