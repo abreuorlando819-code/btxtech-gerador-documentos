@@ -980,17 +980,33 @@ function pdfBlobAndName(){
   return {blob, fname};
 }
 
-$("btnPDF").addEventListener("click", ()=>{
-  const doc = buildPdfficha();
-  const safeName = (data.paciente.nome || "paciente").trim().replaceAll(/[\\/:*?"<>|]/g,"").replaceAll(" ","_");
-  doc.save(`BTXTech_${safeName}_${todayISO()}.pdf`);
-  toast("PDF gerado");
-});
+
 
 $("btnShare").addEventListener("click", async ()=>{
   try{
     const {blob, fname} = pdfBlobAndName();
-    const file = new File([blob], fname, {type:"application/pdf"});
+    const file = $("btnPDF").addEventListener("click", ()=>{
+
+  // 🔥 FORÇAR o nome que está na tela
+  const nomeDigitado =
+    (document.querySelector('input')?.value || "").trim();
+
+  if (nomeDigitado) {
+    data.paciente = data.paciente || {};
+    data.paciente.nome = nomeDigitado;
+  }
+
+  const doc = buildPdfFicha();
+
+  const safeName = (data.paciente.nome || "paciente")
+    .trim()
+    .replaceAll(/[\\/:*?"<>|]/g,"")
+    .replaceAll(" ","_");
+
+  doc.save(`BTXTech_${safeName}_${todayISO()}.pdf`);
+  toast("PDF gerado");
+});
+new File([blob], fname, {type:"application/pdf"});
     if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
       await navigator.share({title:"Documento Clínico", text:"PDF gerado no BTXTech", files:[file]});
       toast("Compartilhado");
