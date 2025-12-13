@@ -799,7 +799,7 @@ $("btnImport").addEventListener("click", ()=>{
 /* =========================
    PDF
 ========================= */
-function buildPdf(){
+function buildPdfficha(){
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({unit:"mm", format:"a4"});
   const margin = 12;
@@ -830,8 +830,15 @@ function buildPdf(){
   doc.setFont("helvetica","normal");
   doc.setFontSize(10);
 
-  const pacienteRows = [
-    ["Nome", data.paciente.nome || "-"],
+    // Garantir nome do paciente (não some)
+  const nomeFromData = (data?.paciente?.nome || "").trim();
+
+  // Tente pegar do input da tela (troque o ID abaixo pelo ID real do seu input)
+  const nomeFromInput = (document.getElementById("pacienteNome")?.value || "").trim();
+
+  const nomePaciente = (nomeFromData || nomeFromInput || "-");
+const pacienteRows = [
+    ["Nome", nomePaciente],
     ["Nascimento", data.paciente.nasc ? new Date(data.paciente.nasc+"T00:00:00").toLocaleDateString("pt-BR") : "-"],
     ["Telefone", data.paciente.tel || "-"],
     ["Endereço", data.paciente.end || "-"],
@@ -974,7 +981,7 @@ function pdfBlobAndName(){
 }
 
 $("btnPDF").addEventListener("click", ()=>{
-  const doc = buildPdf();
+  const doc = buildPdfficha();
   const safeName = (data.paciente.nome || "paciente").trim().replaceAll(/[\\/:*?"<>|]/g,"").replaceAll(" ","_");
   doc.save(`BTXTech_${safeName}_${todayISO()}.pdf`);
   toast("PDF gerado");
